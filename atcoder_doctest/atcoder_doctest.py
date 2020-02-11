@@ -9,22 +9,22 @@ from urllib import parse
 import requests
 from bs4 import BeautifulSoup
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
 def get_body(url: str, output=False):
-    """Parse page.
+    """Parse task page."""
 
-    Keyword arguments:
-    url --
-    """
-
+    # TODO: content < 20
+    # https://abc100.contest.atcoder.jp/
     if "atcoder.jp" not in url:
         contest = url[:-2]
         url = f"https://atcoder.jp/contests/{contest}/tasks/{url}"
 
     r = requests.get(url)
-    bs = BeautifulSoup(r.text, features="html5lib")
+    r.raise_for_status()
+
+    bs = BeautifulSoup(r.text, features="html.parser")
 
     description = bs.find("span", class_="lang-ja") or bs.find(
         "div", id="task-statement"
@@ -34,7 +34,7 @@ def get_body(url: str, output=False):
     for s in description.find_all("pre"):
         body += s.text
 
-    logging.info(body)
+    print(body)
 
     if output:
         _output(url, body)
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("url")
-    parser.add_argument("--output", action="store_true")
+    parser.add_argument("-o", "--output", action="store_true")
 
     args = parser.parse_args()
 
