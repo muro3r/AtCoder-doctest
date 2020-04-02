@@ -4,12 +4,12 @@ import responses
 body = """
 <title>contest title</title>
 <span class="lang-ja">
-  <pre>A B</pre>
-<pre id="pre-sample0">
-Sample0</pre>
-<pre id="pre-sample1">
-Sample1</pre>
-</pre>
+    <pre>A B</pre>
+    <pre id="pre-sample0">Sample0</pre>
+    <pre id="pre-sample1">Sample1</pre>
+    <pre id="pre-sample2">Sample2</pre>
+    <pre id="pre-sample3">Sample3</pre>
+    </pre>
 </span>
 """
 
@@ -18,6 +18,9 @@ http://atcoder.jp/test/test_case
 A B
 Sample0
 Sample1
+Sample2
+Sample3
+
 """
 
 

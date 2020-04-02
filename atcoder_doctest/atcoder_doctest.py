@@ -32,7 +32,7 @@ def get_body(url: str, output=False):
 
     body = bs.title.text + "\n" + url + "\n"
     for s in description.find_all("pre"):
-        body += s.text
+        body += s.text + "\n"
 
     print(body)
 
@@ -41,8 +41,7 @@ def get_body(url: str, output=False):
 
 
 def _output(url: str, body: str):
-    main_statement = """
-def main():
+    main_statement = """def main():
     pass
 
 
