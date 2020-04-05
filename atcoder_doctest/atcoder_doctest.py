@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 """Generate doctest files from AtCoder"""
-
 import argparse
 import logging
 import os
+import sys
 from urllib import parse
 
 import requests
@@ -12,10 +11,10 @@ from bs4 import BeautifulSoup
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 
-def get_body(url: str, output=False):
+def get_body(url: str):
     """Parse task page."""
 
-    # TODO: content < 20
+    # TODO: if content 20
     # https://abc100.contest.atcoder.jp/
     if "atcoder.jp" not in url:
         contest = url[:-2]
@@ -36,11 +35,11 @@ def get_body(url: str, output=False):
 
     print(body)
 
-    if output:
-        _output(url, body)
+    return url, body
 
 
-def _output(url: str, body: str):
+def output(url: str, body: str):
+    """write problem file with main statement"""
     main_statement = """def main():
     pass
 
@@ -57,26 +56,30 @@ if __name__ == "__main__":
         try:
             os.mkdir(contests)
         except IOError:
-            raise
+            sys.exit()
 
     filename = f"{contests}/{tasks}.py"
     if os.path.exists(filename):
         logging.error("The file was not created. File already exists.")
-        exit()
+        sys.exit()
 
-    with open(filename, "w", encoding="utf-8") as f:
-        logging.info(f"{filename} was created.")
-        f.write(_body)
+    with open(filename, "w", encoding="utf-8") as file:
+        logging.info("%s was created.", filename)
+        file.write(_body)
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog="atcoder-doctest")
+
     parser.add_argument("url")
     parser.add_argument("-o", "--output", action="store_true")
 
     args = parser.parse_args()
 
-    get_body(args.url, args.output)
+    url, body = get_body(args.url)
+
+    if args.output:
+        output(url, body)
 
 
 if __name__ == "__main__":
